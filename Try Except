@@ -1,0 +1,110 @@
+# General Function
+def display(person):
+    print(person.given_name, person.given_name)
+
+
+# Class is a template or a Type - Abstract Data Type
+class Person:
+    # Constructor
+    # def define a function and attributes
+    def __init__(self):
+        # Attributes
+        self.given_name = ""
+        self.family_name = ""
+
+    # Classes can have functions/methods
+    def display(self):
+        print(self.given_name, self.family_name)
+
+
+#########
+# Start of program execution
+#########
+
+# Think of n1 as an object of Type Integer - actually a primitive types
+n1 = 15
+
+# p1 and p2 are instances > objects
+p1 = Person()
+# p1.given_name is a field / attribute/ property
+p1.given_name = "Tim"
+p1.family_name = "Hastings"
+
+p2 = Person()
+p2.given_name = "Steve"
+p2.family_name = "Holstein"
+
+# Access attributes using the dot notation.
+# Then print them.
+print(p1.given_name)
+print(p2.given_name)
+
+# Use the Person Display
+p1.display()
+p2.display()
+
+# Use the general display
+display(p1)
+display(p2)
+
+
+# Student inherits from Person.
+# A Student is a Person with extra attributes - number in this example.
+class Student(Person):
+    def __init__(self):
+        self.number = 0
+
+
+# Create a Student which is a Person with a number.
+s1 = Student()
+s1.given_name = "Fred"
+s1.family_name = "Jones"
+s1.number = 42
+
+print(s1.given_name, s1.number)
+
+# How to open and save p1
+# a = append, w = write over
+# "\n"writes a new line
+# Run this a few times
+# Open the file in the current directory.
+# It will create the file if it does not exist.
+# See the results in Result.txt
+try:
+    f = open("Result.txt", "a")
+    s = p1.given_name + ", " + p1.family_name + "\n"
+    f.writelines(s)
+    s = p2.given_name + ", " + p2.family_name + "\n"
+    f.writelines(s)
+    # Always close.
+    # f.close()
+# except (FileExistsError, FileNotFoundError, F):
+except():  # Catch everything
+    print("File Error")
+finally:
+    f.close()
+
+
+def my_person_write_file(person, filename):
+    try:
+        f = open(filename, "a")
+        s = person.given_name + ", " + person.family_name + "\n"
+        f.writelines(s)
+    except():
+        print("File Error")
+    finally:
+        f.close()
+
+
+# Build a list a list of people
+people = list()
+people.append(p1)
+people.append(p2)
+people.append(s1)
+
+print(len(people))
+# for each person in the people list
+for person in people:
+    my_person_write_file(person, "Result2.txt")
+
+# For quick reference and Tut see https://www.w3schools.com/python/
