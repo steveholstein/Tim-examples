@@ -1,0 +1,50 @@
+import pandas as pd
+import glob
+import os
+import gc
+
+"""
+    This module takes every CSV file in a given directory and converts to one single Excel file. Each CSV file is placed in a separate column 
+    within the excel file.  Note that the a warning is reproted that the  Dataframe is inefficient 
+"""
+
+
+# Define paths
+csv_directory = r"C:\Users\hello\PycharmProjects\Read PDF files etc V1\Dir of CSV files"  # Path to the directory containing CSV files
+path1 =  r"C:\Users\hello\PycharmProjects\Read PDF files etc V1\Dir of CSV files2"    #this is the output file for the excel file
+excel_file_path = path1 + r"\report_comments4testv2.xlsx"
+sheet_name = "Sheet1"  # Name of the worksheet
+
+if not os.path.exists(excel_file_path):
+    # Create a new Excel file with a single empty sheet
+    excel_data = pd.DataFrame()  # create an empty DataFrame
+    excel_data.to_excel(excel_file_path, sheet_name=sheet_name, index=False)
+else:
+    # Load the existing Excel DataFrame
+    excel_data = pd.read_excel(excel_file_path, sheet_name=sheet_name)
+
+# # Load the Excel DataFrame
+# excel_data = pd.read_excel(excel_file_path, sheet_name=sheet_name)
+
+# Get a list of CSV files in the directory
+csv_files = glob.glob(csv_directory + "/*.csv")
+
+# Iterate through each CSV file
+column_number = 1  # Start with column B
+for csv_file in csv_files:
+    # csv_data = pd.read_csv(csv_file)
+    for encoding in ["utf-8", "latin-1", "iso-8859-1", "cp1252"]:
+        try:
+            csv_data = pd.read_csv(csv_file, encoding=encoding)
+            print(f"Successfully read CSV using encoding: {encoding}")
+            break  # Exit loop if successful
+        except UnicodeDecodeError:
+            pass  # Move on to the next encoding
+    # Add a new column to the Excel DataFrame
+    excel_data[f"Column{column_number+1}"] = csv_data.iloc[:, 0]  # Assuming single column in CSV
+    column_number += 1  # Move to the next column for the next CSV file
+
+# Save the updated Excel file
+excel_data.to_excel(excel_file_path, sheet_name=sheet_name, index=False)
+gc.collect()  #clears memory, it seems some memory is not being released
+print(f"All CSV files in {csv_directory} successfully added to columns in {excel_file_path}!")
